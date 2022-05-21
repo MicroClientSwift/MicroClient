@@ -20,11 +20,11 @@ public struct NetworkRequest<
     public let method: HTTPMethod
 
     /// The query URL component as an array of name/value pairs.
-    public let queryItems: [URLQueryItem]?
+    public let queryItems: [URLQueryItem]
 
     /// The data sent as the message body of a request as
     /// form item as for an HTTP POST request.
-    public let formItems: [URLFormItem]?
+    public let formItems: [URLFormItem]
 
     /// The base URL used for the request. If present, it overrides
     /// `NetworkConfiguration.baseURL`.
@@ -53,8 +53,8 @@ public struct NetworkRequest<
     public init(
         path: String? = nil,
         method: HTTPMethod,
-        queryItems: [URLQueryItem]? = nil,
-        formItems: [URLFormItem]? = nil,
+        queryItems: [URLQueryItem] = [],
+        formItems: [URLFormItem] = [],
         body: RequestModel? = nil,
         baseURL: URL? = nil,
         decoder: JSONDecoder? = nil,
@@ -80,8 +80,8 @@ extension NetworkRequest {
     func httpBody(
         defaultEncoder: JSONEncoder
     ) throws -> Data? {
-        guard formItems == nil else {
-            return formItems?.urlEncoded()
+        guard formItems.isEmpty else {
+            return formItems.urlEncoded()
         }
 
         return try body.map { payload in
